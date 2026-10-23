@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/QuoteApi.Api/QuoteApi.Api.csproj" />
+    <Project Path="src/QuoteApi.Domain/QuoteApi.Domain.csproj" />
+    <Project Path="src/QuoteApi.Infra/QuoteApi.Infra.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/QuoteApi.Tests/QuoteApi.Tests.csproj" />
+  </Folder>
+</Solution>
