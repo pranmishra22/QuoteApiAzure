@@ -1,0 +1,176 @@
+openapi: '3.1.1'
+info:
+  title: QuoteApi.Api | v1
+  version: 1.0.0
+servers:
+  - url: http://localhost:5252/
+paths:
+  /:
+    get:
+      tags:
+        - QuoteApi.Api
+      responses:
+        '200':
+          description: OK
+  /Quotes:
+    post:
+      tags:
+        - Quotes
+      summary: Creates a new insurance quote.
+      requestBody:
+        description: Cover amount and customer age.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateQuoteRequest'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreateQuoteRequest'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreateQuoteRequest'
+        required: true
+      responses:
+        '201':
+          description: Quote created.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/QuoteResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuoteResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/QuoteResponse'
+        '400':
+          description: Invalid input.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+  '/Quotes/{id}':
+    get:
+      tags:
+        - Quotes
+      summary: Gets a quote by ID.
+      parameters:
+        - name: id
+          in: path
+          description: Quote ID.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Quote found with the ID.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/QuoteResponse'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QuoteResponse'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/QuoteResponse'
+        '404':
+          description: No quote with that ID.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+components:
+  schemas:
+    CreateQuoteRequest:
+      type: object
+      properties:
+        coverAmount:
+          maximum: 10000000
+          minimum: 1
+          pattern: '^-?(?:0|[1-9]\d*)(?:\.\d+)?$'
+          type:
+            - number
+            - string
+          description: 'Amount to insure, between 1 and 10,000,000.'
+          format: double
+        customerAge:
+          maximum: 100
+          minimum: 18
+          pattern: '^-?(?:0|[1-9]\d*)$'
+          type:
+            - integer
+            - string
+          description: 'Customer age in years, 18 to 100.'
+          format: int32
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type:
+            - 'null'
+            - string
+        title:
+          type:
+            - 'null'
+            - string
+        status:
+          pattern: '^-?(?:0|[1-9]\d*)$'
+          type:
+            - 'null'
+            - integer
+            - string
+          format: int32
+        detail:
+          type:
+            - 'null'
+            - string
+        instance:
+          type:
+            - 'null'
+            - string
+    QuoteResponse:
+      required:
+        - id
+        - status
+        - coverAmount
+        - premium
+        - createdAt
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        coverAmount:
+          pattern: '^-?(?:0|[1-9]\d*)(?:\.\d+)?$'
+          type:
+            - number
+            - string
+          format: double
+        premium:
+          pattern: '^-?(?:0|[1-9]\d*)(?:\.\d+)?$'
+          type:
+            - number
+            - string
+          format: double
+        createdAt:
+          type: string
+          format: date-time
+tags:
+  - name: QuoteApi.Api
+  - name: Quotes

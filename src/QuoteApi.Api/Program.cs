@@ -17,7 +17,8 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.MapOpenApi();                          // /openapi/v1.json
+    app.MapOpenApi("/openapi/{documentName}.yaml");  // /openapi/v1.yaml
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/openapi/v1.json", "QuoteApi v1");
@@ -34,3 +35,5 @@ app.MapControllers();
 app.MapGet("/", () => Results.Redirect("/swagger"));
 
 app.Run();
+
+public partial class Program { }
