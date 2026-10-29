@@ -56,3 +56,5 @@ CodeCoverage/
 TestResult.xml
 nunit-*.xml
 .DS_Store
+publish/
+publish.zip
