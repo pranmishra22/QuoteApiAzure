@@ -13,7 +13,10 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<QuoteDbContext>(o =>
     o.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-builder.Services.AddOpenTelemetry().UseAzureMonitor();
+if (!string.IsNullOrWhiteSpace(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
+{
+    builder.Services.AddOpenTelemetry().UseAzureMonitor();
+}
 
 var app = builder.Build();
 

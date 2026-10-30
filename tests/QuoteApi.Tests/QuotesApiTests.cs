@@ -17,7 +17,6 @@ public class ApiFactory : WebApplicationFactory<Program>
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.UseEnvironment("Testing");
-        builder.UseSetting("ConnectionStrings:Default", "Server=unused;Database=unused");
         builder.ConfigureServices(services =>
         {
             services.RemoveAll<DbContextOptions<QuoteDbContext>>();
