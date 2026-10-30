@@ -1,3 +1,4 @@
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using QuoteApi.Infra;
 
@@ -11,7 +12,9 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<QuoteDbContext>(o =>
     o.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
-    
+
+builder.Services.AddOpenTelemetry().UseAzureMonitor();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
