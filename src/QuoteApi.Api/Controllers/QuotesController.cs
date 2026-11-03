@@ -11,7 +11,11 @@ namespace QuoteApi.Api.Controllers;
 public class QuotesController : ControllerBase
 {
     private readonly QuoteDbContext _db;
-    public QuotesController(QuoteDbContext db) => _db = db;
+    private readonly ILogger<QuotesController> _logger;
+    public QuotesController(QuoteDbContext db, ILogger<QuotesController> logger) { 
+        _db = db;
+        _logger = logger;
+    }
 
     /// <summary>Creates a new insurance quote.</summary>
     /// <param name="req">Cover amount and customer age.</param>
@@ -30,6 +34,7 @@ public class QuotesController : ControllerBase
         };
         _db.Quotes.Add(quote);
         await _db.SaveChangesAsync();
+        _logger.LogInformation("Quote created {QuoteId} with premium {Premium}", quote.Id, quote.Premium);
         return CreatedAtAction(nameof(Get), new { id = quote.Id }, ToResponse(quote));
     }
 
