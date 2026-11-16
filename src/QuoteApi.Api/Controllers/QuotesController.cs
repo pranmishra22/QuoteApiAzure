@@ -35,6 +35,7 @@ public class QuotesController : ControllerBase
         _db.Quotes.Add(quote);
         await _db.SaveChangesAsync();
         _logger.LogInformation("Quote created {QuoteId} with premium {Premium}", quote.Id, quote.Premium);
+        AppMetrics.QuotesCreated.Add(1);
         return CreatedAtAction(nameof(Get), new { id = quote.Id }, ToResponse(quote));
     }
 

@@ -1,5 +1,6 @@
 using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.EntityFrameworkCore;
+using QuoteApi.Api;
 using QuoteApi.Infra;
 using Serilog;
 
@@ -16,16 +17,18 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddHealthChecks().AddDbContextCheck<QuoteDbContext>();
 builder.Services.AddDbContext<QuoteDbContext>(o =>
     o.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
 if (!string.IsNullOrWhiteSpace(builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
 {
-    builder.Services.AddOpenTelemetry().UseAzureMonitor();
+    builder.Services.AddOpenTelemetry().UseAzureMonitor().WithMetrics(m => m.AddMeter(AppMetrics.MeterName));
 }
 
 var app = builder.Build();
 
+app.MapHealthChecks("/health");
 app.Use(async (context, next) =>
 {
     var id = context.Request.Headers["X-Correlation-Id"].FirstOrDefault() ?? Guid.NewGuid().ToString();
